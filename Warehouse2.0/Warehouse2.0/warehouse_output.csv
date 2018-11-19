@@ -1,0 +1,7 @@
+ID,Description,Price,Supply Time,Actual Stock,Maximum Stock,Daily Consumption,Reorder Amount,Order Proposal
+100,couch C,350.000000,7,31,75,5,45,Yes
+101,Stool A,33.950001,3,52,150,12,60,Yes
+102,cabinet D,160.500000,21,77,100,3,69,No
+103,chair B,175.000000,8,4,90,7,70,Yes
+104,table A,99.949997,12,28,120,5,70,Yes
+Total stock value in warehouse is: 28472.500000 euros.
