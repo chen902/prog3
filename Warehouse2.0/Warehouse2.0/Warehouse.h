@@ -25,7 +25,7 @@ private:
 
 	std::vector<Stock*> items_in_stock;
 	
-	std::string* split(char c, std::string str);
+	static std::string* split(char c, std::string str);
 public:
 	void init_from_file(std::string filename);
 	void write_to_file(std::string filename);
