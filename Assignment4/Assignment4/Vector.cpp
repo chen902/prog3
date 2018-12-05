@@ -14,7 +14,6 @@
  * from header file. (dimension=2, init_value=0).
  */
 Vector::Vector(int dimension, double init_value) {
-	std::cout << "normal constructor is called" << std::endl;
 	this->dimension = dimension;
 	this->coordinates = new double[dimension];
 	for (int i = 0; i < dimension; ++i) {
@@ -27,7 +26,6 @@ Vector::Vector(int dimension, double init_value) {
  * A deep copy is required in that case due to the runtime allocated array of coordinates.
  */
 Vector::Vector(const Vector &obj) {
-	std::cout << "copy constructor is called" << std::endl;
 	this->init_with_vector(obj);
 }
 
@@ -36,7 +34,6 @@ Vector::Vector(const Vector &obj) {
  * Required in order to release the memory held by the array of coordinates when deleting an instance of Vector.
  */
 Vector::~Vector() {
-	std::cout << "destructor is called" << std::endl;
 	// Release memory used by the array
 	delete[] this->coordinates;
 }
@@ -83,7 +80,6 @@ std::string Vector::to_string() const{
  * If the index is out of array bounds, an exception stating the given index will be thrown.
  */
 double& Vector::operator[](int index) {
-	std::cout << "non const subsctiption is called" << std::endl;
 	if (index < 0 || index >= this->dimension) {
 		throw std::out_of_range("Index " + std::to_string(index) + " out of range!");
 	}
@@ -97,7 +93,6 @@ double& Vector::operator[](int index) {
  * If the index is out of array bounds, an exception stating the given index will be thrown.
  */
 const double& Vector::operator[](int index) const {
-	std::cout << "constant subsctiption is called" << std::endl;
 	if (index < 0 || index >= this->dimension) {
 		throw std::out_of_range("Index " + std::to_string(index) + " out of range!");
 	}
@@ -109,7 +104,6 @@ const double& Vector::operator[](int index) const {
  * This is necessary in order to perform a deep copy of the coordinates array when assigning.
  */
 void Vector::operator=(const Vector& obj) {
-	std::cout << "assignment subsctiption is called" << std::endl;
 	this->init_with_vector(obj);
 }
 
