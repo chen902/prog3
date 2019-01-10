@@ -32,7 +32,7 @@ namespace stringexercise {
 		// constant member functions which do not change the state of the object
 		std::size_t length() const { return occupied; } // return number of characters
 		const char* c_str() const { return sequence; }	 // return text as a C-string
-		void swap(mystring&);							 // exchange of two strings
+		void swap(mystring& other);							 // exchange of two strings
 		bool is_empty() { return (occupied == 0); }		 // check if empty
 
 		// friends
@@ -48,10 +48,11 @@ namespace stringexercise {
 		size_t occupied; // current number of characters
 		size_t capacity; //	maximum number of characters
 		char *sequence;	 // pointer to the beginning of the string array
-		const double CAPACITY_DELTA = 2;
-		const int DEFAULT_CAPACITY = 15;
 		void resize(size_t size);
 	};
+
+	const double CAPACITY_DELTA = 2;
+	const int DEFAULT_CAPACITY = 15;
 
 	// Prototype declarations of NON-MEMBER functions
 	// to be used in context with class mystring
