@@ -1,5 +1,5 @@
 /**@file vector_vector_test.cpp
- * @brief unit testing using the Catch2 framework for the MyString project.
+ * @brief unit testing using the Catch2 framework for the Vector<T> project.
  *
  *
  * @author Chen Kasirer

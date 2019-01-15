@@ -39,7 +39,7 @@ public:
 	friend void swap(Vector<T> &v1, Vector<T> &v2);
 };
 
-/*
+/**
  * Ctors and Dtor
  */
 template<class T>
@@ -48,7 +48,7 @@ Vector<T>::Vector() {
 	this->dimension = 0;
 }
 
-/*
+/**
  * Default constructor. initializes and empty vector.
  */
 template<class T>
@@ -61,7 +61,7 @@ Vector<T>::Vector(int dimension,T init_value){
 	}
 }
 
-/*
+/**
  * Copy constructor. Allow a creation of a new Vector object using the data contained in an existing one.
  * A deep copy is required in that case due to the runtime allocated array of the data.
  */
@@ -70,7 +70,7 @@ Vector<T>::Vector(const Vector &obj) {
 	this->init_with_vector(obj);
 }
 
-/*
+/**
  * Destructor.
  * Required in order to release the memory held by the array of coordinates when deleting an instance of Vector.
  */
@@ -79,7 +79,7 @@ Vector<T>::~Vector() {
 	delete[] this->data;
 }
 
-/*
+/**
  * helper function for the initialization of a vector using content of another vector
  */
 template <class T>
@@ -96,7 +96,7 @@ void Vector<T>::init_with_vector(const Vector<T>& other) {
 	}
 }
 
-/*
+/**
  * returns the size of the vector
  */
 template<class T>
@@ -105,7 +105,7 @@ inline int Vector<T>::size() const
 	return this->dimension;
 }
 
-/*
+/**
  * inserts a value in the given index. content will be shifted to the left
  */
 template<class T>
@@ -115,7 +115,7 @@ void Vector<T>::insert(int index, const T& value)
 	this->insert(index, *t);
 }
 
-/*
+/**
  * inserts the content from another vector into this vector
  */
 template<class T>
@@ -141,7 +141,7 @@ void Vector<T>::insert(int index, const Vector<T>& v)
 	}
 }
 
-/*
+/**
  * removes an element from the requested index. the gap is closed by right shifting the elements.
  * the vector is then downsized.
  */
@@ -167,7 +167,7 @@ void Vector<T>::remove(int index)
 }
 
 
-/*
+/**
  * returns a string representation of the elements of the vector.
  * element types are expected to implement the output stream operator.
  */
@@ -189,7 +189,7 @@ std::string Vector<T>::to_string() const {
 	return output.str();
 }
 
-/*
+/**
  * a private helper method that resizes the vector to the request size.
  * when enlarging, the old content is copied to the start of the new vector.
  * when shrinkink, the end will be discarded.
@@ -216,7 +216,7 @@ void Vector<T>::resize(int size)
 	this->dimension = size;
 }
 
-/*
+/**
  * A non-const operator[] overload.
  * Given an 'index' a non-constans reference to a cell in the coordinates array will be returned.
  * This may be used to retrive a cell in order to assign a value to it.
@@ -230,7 +230,7 @@ T& Vector<T>::operator[](int index) {
 	return this->data[index];
 }
 
-/*
+/**
  * A const operator[] overload.
  * Given an 'index' a const reference to cell in the coordinates array will be returned.
  * this may be used to retrive the content of a cell that shall not be modified.
@@ -244,7 +244,7 @@ const T& Vector<T>::operator[](int index) const {
 	return this->data[index];
 }
 
-/*
+/**
  * assignment operator overload, performes deep copy
  */
 template <class T>
@@ -252,11 +252,11 @@ void Vector<T>::operator=(const Vector<T>& obj) {
 	this->init_with_vector(obj);
 }
 
-/*
+/**
  * Non member functions
  */
 
-/*
+/**
  * swaps two vectors by swapping pointers and administrative data
  */
 template <class T>
@@ -274,7 +274,7 @@ void swap(Vector<T> &v1, Vector<T> &v2) {
 	v2.dimension = size;
 }
 
-/*
+/**
  * output stream operator overloading for class Vector<T>
  */
 template <class T>
