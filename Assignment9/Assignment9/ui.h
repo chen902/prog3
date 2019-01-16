@@ -1,3 +1,9 @@
+/**@file  ui.h
+ * Author: Chen Kasirer
+ *
+ * Created on Januray 16, 2019
+ */
+
 #pragma once
 #include <string>
 #include <iostream>
@@ -10,8 +16,6 @@ class ui
 {
 public:
 	void displayMenu(string title, string* options, size_t numOfOptions, bool withClear = false);
-	int promptUser(string* options, size_t numOfOptions);
-	string promptUser(string prompt);
 	string getString();
 	void output(const string& str);
 	

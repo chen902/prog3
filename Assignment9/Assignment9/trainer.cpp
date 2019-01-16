@@ -1,12 +1,30 @@
+/**@file  trainer.cpp
+ * Author: Chen Kasirer
+ *
+ * Created on Januray 16, 2019
+ *
+ * The trainer class is the main class of the vocabulary trainer, it contains all logic.
+ * This vocabulary trainer is statistics based, and at its core a priority_queue is used.
+ * Words are ranked based on the ration between the number of attempts and the number of successfull attempts.
+ * The more the user gets a word wrong, the more often it'll appear at the top of the queue.
+ * 
+ * After indicating that a word was correctly translated, its statistics are updated and it is removed from the queue and moved recorded in a vector. 
+ * After indicating that a word was incorrectly translated, its statistics are updated and it is put back to the queue. Depending on its statistics, 
+ * it might appear again immidiately.
+ */
+
 #include "trainer.h"
 
 using namespace std;
 
-
+/**
+ * The vocabulary is initialized from a file, if it exists. 
+ */
 trainer::trainer(string filename) : ui()
 {
 	this->filename = filename;
-	// Allocate memory for the priority queue
+	
+	// Allocate memory for the priority queue and vector
 	this->words = new priority_queue<word, vector<word>, WordCompare>();
 	this->answered_correctly = new vector<word>();
 
@@ -15,6 +33,9 @@ trainer::trainer(string filename) : ui()
 }
 
 
+/**
+ * Dtor, releases memory of used data structures
+ */
 trainer::~trainer()
 {
 	delete this->ui;
@@ -22,6 +43,9 @@ trainer::~trainer()
 	delete this->answered_correctly;
 }
 
+/**
+ * This function is the main loop of the trainer, calls all other functionality 
+ */
 void trainer::start()
 {
 	string t_mainmenu = "Welcome to Vocabu-hell!";
@@ -54,13 +78,16 @@ void trainer::start()
 			break;
 		}
 
-		Sleep(2000);
+		Sleep(this->SLEEP_TIME);
 		// redraw main menu and wait for user action
 		this->ui->displayMenu(t_mainmenu, o_mainmenu, 2,true);
 		choice = this->ui->getString();
 	}
 }
 
+/**
+ * This function handles the routine for adding a new word to the vocabulary
+ */
 void trainer::enterNewWord() {
 	this->ui->output("Please write a word in German:");
 	string org = this->ui->getString();
@@ -73,6 +100,10 @@ void trainer::enterNewWord() {
 	this->ui->output("The word " + org + " has been successfully entered to the database");
 }
 
+/**
+ * This function handles the routine for practicing a word. A word is feched from the top of the queue and displayed to the user.
+ * they are then displayed the translation, and prompted to say if they got it right, which is recoded on the statistics of each word.
+ */
 void trainer::practice() {
 	string t_practice = "Do you know the meaning of the following word?";
 	string o_practice[]{ "I think so.. tell me!" };
@@ -92,17 +123,20 @@ void trainer::practice() {
 		// invalid choice
 		else {
 			this->ui->output("Please enter a valid choice!");
-			Sleep(1000);
+			Sleep(this->SLEEP_TIME);
 		}
 	}
 	// queue is empty
 	catch (const std::exception&) {
 		this->ui->output("Word database is empty!");
-		Sleep(1000);
+		Sleep(this->SLEEP_TIME);
 	}
 
 }
 
+/**
+ *	Handles the routing showing the user the right answer, and lets them choose if they got it right or not.
+ */
 void trainer::showSolution(word& w) {
 	string t_gotit = "Did you get it right?";
 	string o_gotit[]{ "Yes! got it!", "Messed it up :(" };
@@ -129,6 +163,9 @@ void trainer::showSolution(word& w) {
 	}
 }
 
+/**
+ * Updates the statistics of a word in case of a correct answer
+ */
 void trainer::handleBingo(word& w) {
 	w.bingos++;
 	w.tries++;
@@ -136,6 +173,9 @@ void trainer::handleBingo(word& w) {
 	this->ui->output("Well done!");
 }
 
+/**
+ * Updates the statistics of a word in case the user did not know the answer
+ */
 void trainer::handleMiss(word& w) {
 	w.tries++;
 	// put the word back to the queue
@@ -144,8 +184,8 @@ void trainer::handleMiss(word& w) {
 }
 
 /**
-* Returns a copy of the word on top of queue, and removes it.
-*/
+ * Returns a copy of the word from the top of queue, and removes it.
+ */
 word trainer::getWord()
 {
 	if (this->words->empty())
@@ -160,11 +200,17 @@ word trainer::getWord()
 	return w;
 }
 
+/**
+ * Pushes a word into the priority queue
+ */
 void trainer::pushWord(const word & w)
 {
 	this->words->push(w);
 }
 
+/**
+ * Writes the content of the priority queue and the correctly answered words vector to a file.
+ */
 void trainer::writeToFile(string filename) {
 	ofstream out_file(filename);
 
@@ -198,6 +244,9 @@ void trainer::writeToFile(string filename) {
 
 }
 
+/**
+ * Loads the vocabulary from a file, if it exists
+ */
 void trainer::loadFromFile(string filename) {
 
 	ifstream inFile(filename);	
@@ -222,7 +271,10 @@ void trainer::loadFromFile(string filename) {
 	inFile.close();
 }
 
-
+/**
+ * Borrowed from the Warehouse assignment. Gets a comma delimited string and returns an array containing each of the 
+ * separate values.
+ */
 string* trainer::split(char c, const string& str) {
 	// first count the number of times the delimeter char appears in the string
 	// to determine the size of the output array.
@@ -258,6 +310,9 @@ string* trainer::split(char c, const string& str) {
 	return frags;
 }
 
+/**
+ * Should be called before terminating the program in order to any new words of statistics to a file.
+ */
 void trainer::end() {
 	this->writeToFile(filename);
 }
