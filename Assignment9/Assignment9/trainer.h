@@ -58,6 +58,10 @@ public:
 	void loadFromFile(string filename);
 	void writeToFile(string filename);
 	void practice();
+	void enterNewWord();
+	void handleBingo(word& w);
+	void handleMiss(word& w);
+	void showSolution(word& w);
 
 
 private:

@@ -24,8 +24,6 @@ trainer::~trainer()
 
 void trainer::start()
 {
-	string filename = "wordbank.csv";
-
 	string t_mainmenu = "Welcome to Vocabu-hell!";
 	string o_mainmenu[]{ "Hit me!","Add a word" };
 
@@ -47,15 +45,7 @@ void trainer::start()
 		}
 		// The user has chosen to enter a new word
 		case 2: {
-			this->ui->output("Please write a word in German:");
-			string org = this->ui->getString();
-
-			this->ui->output("Please enter the word " + org + " in English:");
-			string trans = this->ui->getString();
-
-			word w(org, trans);
-			this->pushWord(w);
-			this->ui->output("The word " + org + " has been successfully entered to the database");
+			this->enterNewWord();
 			break;
 		}
 		// invalid choice in main menu
@@ -71,12 +61,21 @@ void trainer::start()
 	}
 }
 
+void trainer::enterNewWord() {
+	this->ui->output("Please write a word in German:");
+	string org = this->ui->getString();
+
+	this->ui->output("Please enter the word " + org + " in English:");
+	string trans = this->ui->getString();
+
+	word w(org, trans);
+	this->pushWord(w);
+	this->ui->output("The word " + org + " has been successfully entered to the database");
+}
+
 void trainer::practice() {
 	string t_practice = "Do you know the meaning of the following word?";
 	string o_practice[]{ "I think so.. tell me!" };
-
-	string t_gotit = "Did you get it right?";
-	string o_gotit[]{ "Yes! got it!", "Messed it up :(" };
 
 	try {
 		// This will throw an exception if no words have been entered
@@ -88,44 +87,60 @@ void trainer::practice() {
 
 		// User wants to continue
 		if (n_choice == 1) {
-
-			// Show translation and ask the user if they got it right
-			this->ui->output(w.original + " means: " + w.translation);
-			this->ui->displayMenu(t_gotit, o_gotit, 2);
-			int n_choice = stoi(this->ui->getString());
-
-			switch (n_choice)
-			{
-				// User got it right
-			case 1:
-				w.bingos++;
-				w.tries++;
-				this->answered_correctly->push_back(w);
-				break;
-				// User fucked it up
-			case 2:
-				w.tries++;
-				// put the word back to the queue
-				this->pushWord(w);
-				break;
-				// user is having a stroke
-			default:
-				this->ui->output("Please enter a valid choice!");
-				break;
-			}
+			this->showSolution(w);
 		}
 		// invalid choice
 		else {
 			this->ui->output("Please enter a valid choice!");
-			Sleep(2000);
+			Sleep(1000);
 		}
 	}
 	// queue is empty
 	catch (const std::exception&) {
 		this->ui->output("Word database is empty!");
-		Sleep(2000);
+		Sleep(1000);
 	}
 
+}
+
+void trainer::showSolution(word& w) {
+	string t_gotit = "Did you get it right?";
+	string o_gotit[]{ "Yes! got it!", "Messed it up :(" };
+
+	// Show translation and ask the user if they got it right
+	this->ui->output(w.original + " means: " + w.translation);
+	this->ui->displayMenu(t_gotit, o_gotit, 2);
+	int n_choice = stoi(this->ui->getString());
+
+	switch (n_choice)
+	{
+		// User got it right
+	case 1:
+		this->handleBingo(w);
+		break;
+		// User fucked it up
+	case 2:
+		this->handleMiss(w);
+		break;
+		// user is having a stroke
+	default:
+		this->ui->output("Please enter a valid choice!");
+		break;
+	}
+}
+
+void trainer::handleBingo(word& w) {
+	w.bingos++;
+	w.tries++;
+	this->answered_correctly->push_back(w);
+	this->ui->output("Well done!");
+}
+
+void trainer::handleMiss(word& w) {
+	w.tries++;
+	// put the word back to the queue
+	this->pushWord(w);
+	this->ui->output("Better luck next time!");
 }
 
 /**
