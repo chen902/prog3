@@ -117,11 +117,13 @@
   <ItemGroup>
     <ClInclude Include="trainer.h" />
     <ClInclude Include="ui.h" />
+    <ClInclude Include="word.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="main.cpp" />
     <ClCompile Include="trainer.cpp" />
     <ClCompile Include="ui.cpp" />
+    <ClCompile Include="word.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -21,6 +21,9 @@
     <ClInclude Include="trainer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="word.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="ui.cpp">
@@ -30,6 +33,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="word.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

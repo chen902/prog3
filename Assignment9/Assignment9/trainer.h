@@ -1,5 +1,6 @@
 #pragma once
 #include "ui.h"
+#include "word.h"
 #include <string>
 #include <queue>
 #include <map>
@@ -11,34 +12,6 @@ using namespace std;
 class trainer
 {
 public:
-	class word {
-	public:
-		string original;
-		string translation;
-		double tries;
-		double bingos;
-
-		word(const word& w) : original(w.original), translation(w.translation),tries(w.tries),bingos(w.bingos) {};
-		word(const string& org, const string& trans, double bingos, double tries) :
-			original(org), translation(trans) {
-			this->tries = tries; 
-			this->bingos = bingos;
-		};
-
-		word(const string& org, const string& trans) :
-			original(org), translation(trans) {
-			tries = 1; bingos = 1;
-		};
-
-		string to_string() const {
-			string output;
-			output += this->original +"," 
-				   + this->translation + "," 
-					+ std::to_string(this->bingos) + ","
-					+ std::to_string(this->tries);
-			return output;
-		};
-	};
 
 	class WordCompare {
 	public:
@@ -50,9 +23,16 @@ public:
 	trainer(string filename = "wordbank.csv");
 	~trainer();
 
-
 	void start();
 	void end();
+
+
+private:
+	string filename;
+	ui* ui;
+	priority_queue<word,vector<word>,WordCompare>* words;
+	vector<word>* answered_correctly;
+
 	word getWord();
 	void pushWord(const word& w);
 	void loadFromFile(string filename);
@@ -62,13 +42,5 @@ public:
 	void handleBingo(word& w);
 	void handleMiss(word& w);
 	void showSolution(word& w);
-
-
-private:
-	string filename;
-	ui* ui;
-	priority_queue<word,vector<word>,WordCompare>* words;
-	vector<word>* answered_correctly;
-
 	string* split(char c, const string& str);
 };

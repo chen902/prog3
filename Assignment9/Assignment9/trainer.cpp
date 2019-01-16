@@ -146,7 +146,7 @@ void trainer::handleMiss(word& w) {
 /**
 * Returns a copy of the word on top of queue, and removes it.
 */
-trainer::word trainer::getWord()
+word trainer::getWord()
 {
 	if (this->words->empty())
 		throw exception();
