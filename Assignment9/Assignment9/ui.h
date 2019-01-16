@@ -3,15 +3,18 @@
 #include <iostream>
 #include <vector>
 
+
+using namespace std;
+
 class ui
 {
 public:
-	ui();
-	~ui();
-
-	void displayMenu();
+	void displayMenu(string title, string* options, size_t numOfOptions, bool withClear = false);
+	int promptUser(string* options, size_t numOfOptions);
+	string promptUser(string prompt);
+	string getString();
+	void output(const string& str);
 	
 	void clear();
-	void exit();
 };
 

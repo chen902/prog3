@@ -3,60 +3,64 @@
 #include <string>
 #include <queue>
 #include <map>
+#include <Windows.h>
+#include <fstream>
 
 using namespace std;
 
 class trainer
 {
 public:
-	class userChoice {
+	class word {
 	public:
-		string name;
-		void (*f);
+		string original;
+		string translation;
+		double tries;
+		double bingos;
 
-		userChoice(string name, void* f) {
-			this->name = name;
-			this->f = f;
-		}
+		word(const word& w) : original(w.original), translation(w.translation),tries(w.tries),bingos(w.bingos) {};
+		word(const string& org, const string& trans, double tries, double bingos) :
+			original(org), translation(trans) {
+			tries = tries; bingos = bingos;
+		};
+
+		word(const string& org, const string& trans) :
+			original(org), translation(trans) {
+			tries = 1; bingos = 1;
+		};
+
+		string to_string() const {
+			string output;
+			output += this->original +"," 
+				   + this->translation + "," 
+					+ std::to_string(this->bingos) + ","
+					+ std::to_string(this->tries);
+			return output;
+		};
 	};
 
-	class screen {
+	class WordCompare {
 	public:
-		string title;
-		vector<userChoice>* options;
-		
-		
-		screen(string title, vector<userChoice>* options) {
-			this->title;
-			this->options = options;
+		bool operator()(const word& w1, const word& w2) {
+			return (w1.bingos / w1.tries) > (w2.bingos / w2.tries);
 		}
 	};
 
 	trainer();
 	~trainer();
 
+
 	void start();
-	void initialize();
-
-	void practice();
-	void addWord();
-	void exit();
-	void gotIt();
-	void wrong();
-
-	// get's a screen, displays it's options, and invokes function assigned to the option selected 
-	void promptUser(string screen);
-
-	class word {
-		string original;
-		string translation;
-		int tries;
-		int bingos;
-	};
+	word getWord();
+	void pushWord(const word& w);
+	void loadFromFile(string filename);
+	void writeToFile(string filename);
 
 
 private:
 	ui* ui;
-	priority_queue<word> words;
-};
+	priority_queue<word,vector<word>,WordCompare>* words;
+	vector<word>* answered_correctly;
 
+	string* split(char c, const string& str);
+};
