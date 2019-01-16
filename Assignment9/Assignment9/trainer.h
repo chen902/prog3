@@ -19,7 +19,7 @@ public:
 		double bingos;
 
 		word(const word& w) : original(w.original), translation(w.translation),tries(w.tries),bingos(w.bingos) {};
-		word(const string& org, const string& trans, double tries, double bingos) :
+		word(const string& org, const string& trans, double bingos, double tries) :
 			original(org), translation(trans) {
 			this->tries = tries; 
 			this->bingos = bingos;
@@ -43,22 +43,25 @@ public:
 	class WordCompare {
 	public:
 		bool operator()(const word& w1, const word& w2) {
-			return (w1.bingos / w1.tries) < (w2.bingos / w2.tries);
+			return (w1.bingos / w1.tries) > (w2.bingos / w2.tries);
 		}
 	};
 
-	trainer();
+	trainer(string filename = "wordbank.csv");
 	~trainer();
 
 
 	void start();
+	void end();
 	word getWord();
 	void pushWord(const word& w);
 	void loadFromFile(string filename);
 	void writeToFile(string filename);
+	void practice();
 
 
 private:
+	string filename;
 	ui* ui;
 	priority_queue<word,vector<word>,WordCompare>* words;
 	vector<word>* answered_correctly;

@@ -3,11 +3,15 @@
 using namespace std;
 
 
-trainer::trainer() : ui()
+trainer::trainer(string filename) : ui()
 {
+	this->filename = filename;
 	// Allocate memory for the priority queue
 	this->words = new priority_queue<word, vector<word>, WordCompare>();
 	this->answered_correctly = new vector<word>();
+
+	// Read words from file if it exists
+	this->loadFromFile(filename);
 }
 
 
@@ -22,16 +26,8 @@ void trainer::start()
 {
 	string filename = "wordbank.csv";
 
-	this->loadFromFile(filename);
-
 	string t_mainmenu = "Welcome to Vocabu-hell!";
 	string o_mainmenu[]{ "Hit me!","Add a word" };
-
-	string t_practice = "Do you know the meaning of the following word?";
-	string o_practice[]{ "I think so.. tell me!" };
-	
-	string t_gotit = "Did you get it right?";
-	string o_gotit[]{ "Yes! got it!", "Messed it up :(" };
 
 	// Display main menu
 	this->ui->displayMenu(t_mainmenu,o_mainmenu, 2, true);
@@ -46,53 +42,7 @@ void trainer::start()
 		switch (n_choice)
 		{
 		case 1: {
-			try {
-				// This will throw an exception if no words have been entered
-				word w = this->getWord();
-
-				// Display a word and wait
-				this->ui->displayMenu(t_practice + "\n" + w.original, o_practice, 1);
-				int n_choice = stoi(this->ui->getString());
-
-				// User wants to continue
-				if (n_choice == 1) {
-
-					// Show translation and ask the user if they got it right
-					this->ui->output(w.original + " means: " + w.translation);
-					this->ui->displayMenu(t_gotit, o_gotit, 2);
-					int n_choice = stoi(this->ui->getString());
-
-					switch (n_choice)
-					{
-					// User got it right
-					case 1:
-						w.bingos++;
-						w.tries++;
-						this->answered_correctly->push_back(w);
-						break;
-						// User fucked it up
-					case 2:
-						w.tries++;
-						// put the word back to the queue
-						this->pushWord(w);
-						break;
-					// user is having a stroke
-					default:
-						this->ui->output("Please enter a valid choice!");
-						break;
-					}
-				}
-				// invalid choice
-				else {
-					this->ui->output("Please enter a valid choice!");
-					Sleep(2000);
-				}
-			}
-			// queue is empty
-			catch (const std::exception&) {
-				this->ui->output("Word database is empty!");
-				Sleep(2000);
-			}
+			this->practice();
 			break;
 		}
 		// The user has chosen to enter a new word
@@ -119,9 +69,64 @@ void trainer::start()
 		this->ui->displayMenu(t_mainmenu, o_mainmenu, 2,true);
 		choice = this->ui->getString();
 	}
-	this->writeToFile(filename);
 }
 
+void trainer::practice() {
+	string t_practice = "Do you know the meaning of the following word?";
+	string o_practice[]{ "I think so.. tell me!" };
+
+	string t_gotit = "Did you get it right?";
+	string o_gotit[]{ "Yes! got it!", "Messed it up :(" };
+
+	try {
+		// This will throw an exception if no words have been entered
+		word w = this->getWord();
+
+		// Display a word and wait
+		this->ui->displayMenu(t_practice + "\n" + w.original, o_practice, 1);
+		int n_choice = stoi(this->ui->getString());
+
+		// User wants to continue
+		if (n_choice == 1) {
+
+			// Show translation and ask the user if they got it right
+			this->ui->output(w.original + " means: " + w.translation);
+			this->ui->displayMenu(t_gotit, o_gotit, 2);
+			int n_choice = stoi(this->ui->getString());
+
+			switch (n_choice)
+			{
+				// User got it right
+			case 1:
+				w.bingos++;
+				w.tries++;
+				this->answered_correctly->push_back(w);
+				break;
+				// User fucked it up
+			case 2:
+				w.tries++;
+				// put the word back to the queue
+				this->pushWord(w);
+				break;
+				// user is having a stroke
+			default:
+				this->ui->output("Please enter a valid choice!");
+				break;
+			}
+		}
+		// invalid choice
+		else {
+			this->ui->output("Please enter a valid choice!");
+			Sleep(2000);
+		}
+	}
+	// queue is empty
+	catch (const std::exception&) {
+		this->ui->output("Word database is empty!");
+		Sleep(2000);
+	}
+
+}
 
 /**
 * Returns a copy of the word on top of queue, and removes it.
@@ -236,4 +241,8 @@ string* trainer::split(char c, const string& str) {
 	frags[i] = str.substr(left);
 
 	return frags;
+}
+
+void trainer::end() {
+	this->writeToFile(filename);
 }

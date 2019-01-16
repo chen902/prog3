@@ -4,4 +4,5 @@
 int main() {
 	trainer t;
 	t.start();
+	t.end();
 }
