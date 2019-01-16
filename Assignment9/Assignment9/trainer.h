@@ -21,7 +21,8 @@ public:
 		word(const word& w) : original(w.original), translation(w.translation),tries(w.tries),bingos(w.bingos) {};
 		word(const string& org, const string& trans, double tries, double bingos) :
 			original(org), translation(trans) {
-			tries = tries; bingos = bingos;
+			this->tries = tries; 
+			this->bingos = bingos;
 		};
 
 		word(const string& org, const string& trans) :
@@ -42,7 +43,7 @@ public:
 	class WordCompare {
 	public:
 		bool operator()(const word& w1, const word& w2) {
-			return (w1.bingos / w1.tries) > (w2.bingos / w2.tries);
+			return (w1.bingos / w1.tries) < (w2.bingos / w2.tries);
 		}
 	};
 

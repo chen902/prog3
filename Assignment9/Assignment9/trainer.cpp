@@ -64,23 +64,23 @@ void trainer::start()
 
 					switch (n_choice)
 					{
-						// User got it right
+					// User got it right
 					case 1:
 						w.bingos++;
 						w.tries++;
+						this->answered_correctly->push_back(w);
 						break;
 						// User fucked it up
 					case 2:
 						w.tries++;
+						// put the word back to the queue
+						this->pushWord(w);
 						break;
-						// user is having a stroke
+					// user is having a stroke
 					default:
 						this->ui->output("Please enter a valid choice!");
 						break;
 					}
-					// put the word back to the queue
-					this->pushWord(w);
-					Sleep(2000);
 				}
 				// invalid choice
 				else {
@@ -183,26 +183,23 @@ void trainer::loadFromFile(string filename) {
 	ifstream inFile(filename);	
 
 	if (!inFile.is_open()) {
-		throw exception();
+		return;
 	}
 
 	std::string line;
 
-	// Get and discard first line (headers)
-	std::getline(inFile, line);
-
 	// load each word to queue
 	while (std::getline(inFile, line)) {
 		string* values = split(',', line);
+
 		word w(values[0], 
 			   values[1], 
 			   stod(values[2]), 
 			   stod(values[3]));
 		this->words->push(w);
 	}
-
+		
 	inFile.close();
-	//delete &inFile;
 }
 
 
